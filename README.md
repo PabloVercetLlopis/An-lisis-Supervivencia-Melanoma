@@ -8,8 +8,8 @@ El análisis tiene como objetivo estudiar la relación entre varios factores (co
 ## Estructura del Proyecto
 
 - `Analisis/`: Contiene los archivos del análisis.
+  - `Código guente`: Código fuente utilizado en este trabajo.
   - `Supervivencia_Melanoma.Rmd`: Documento en R Markdown que incluye el código y la interpretación de los resultados.
-  - `Supervivencia_Melanoma.html`: Resultado renderizado del archivo R Markdown en formato HTML.
 
 - `Data/`: Contiene los datasets necesarios para el análisis.
   - `Melanoma_data.csv`: Dataset de melanoma.
