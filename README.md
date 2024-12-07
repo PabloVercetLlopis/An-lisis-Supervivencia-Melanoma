@@ -12,7 +12,7 @@ El análisis tiene como objetivo estudiar la relación entre varios factores (co
   - `Supervivencia_Melanoma.html`: Resultado renderizado del archivo R Markdown en formato HTML.
 
 - `Data/`: Contiene los datasets necesarios para el análisis.
-  - `melanoma_data.csv`: Dataset de melanoma.
+  - `Melanoma_data.csv`: Dataset de melanoma.
   
 - `Resultados/`: Guarda los resultados del análisis, como gráficos y tablas.
   - `gráficos/`: Carpeta donde se guardan los gráficos generados.
