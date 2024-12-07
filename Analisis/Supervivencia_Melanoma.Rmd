@@ -1,0 +1,241 @@
+---
+title: "Untitled"
+author: "Pablo Vercet"
+date: "2024-12-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Cargar librerias
+```{r}
+library(caret)
+library(ConfusionTableR)
+library(DataExplorer)
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(kableExtra)
+library(ModelMetrics)
+library(openxlsx)
+library(plotly)
+library(probably)
+library(pROC)
+library(psych)
+library(purrr)
+library(randomForest)
+library(reshape2)
+library(skimr)
+library(stringr)
+library(tidymodels)
+library(WRS2)
+library(tidyverse)
+library(univariateML)
+library(vip)
+library(xgboost)
+library(readr)
+library(vcd)
+library(corrplot)
+library(MASS)
+library(gtools)
+library(gplots)
+library(cmprsk)
+library(glue)
+```
+
+
+# Cargar el dataset Melanoma
+Tiempo de supervivencia en dias 
+Status: 1 muerte por melanoma, 2 vivo, 3 muerto por otras causas
+sexo: 1 masculino, 0 femenino
+edad en años
+años de la operacion
+grosor del tumor en mm
+ulceras: 1 Si hay, 0 ausencia
+```{r}
+data(Melanoma, package = "MASS")
+```
+
+# Cambio de algunas variables
+```{r}
+data(Melanoma, package = "MASS")
+Melanoma <- Melanoma %>%
+  mutate(
+    status = as.factor(dplyr::recode(status, '2' = "0", '1' = "1", '3' = "2"))
+    )
+    
+head(Melanoma)
+
+```
+
+
+# Incidencia acumulativa para riesgos competitivos
+## Convertir status en un factor con niveles y etiquetas específicos
+```{r}
+Melanoma$status <- factor(Melanoma$status,
+                          levels = c(0,1,2),
+                          labels = c("Censored", "died from melanoma", "died from other causes"))
+
+```
+
+## Obtener la frecuencia de cada categoria y convertirla en un dataframa
+```{r}
+frequencies_df <- as.data.frame(table(Melanoma$status))
+```
+
+## Renombrar las columnas para mayor claridad
+```{r}
+names(frequencies_df) <- c("Status", "Frequency")
+```
+
+## Mostrar el dataframe
+```{r}
+print(frequencies_df)
+```
+
+# Saber tiempo maximo de supervivencia (en dias)
+```{r}
+max(Melanoma$time)
+```
+
+```{r}
+packageVersion("glue")
+```
+
+
+#Calcular la incidencia acumulada
+```{r}
+cum_inc <- cuminc(ftime = Melanoma$time, 
+                 Melanoma$status, 
+                 cencode = 0) 
+
+length(cum_inc)
+```
+
+```{r}
+nombres_eventos <- c("Censores", "died from melanoma", "dead from other causes")
+
+incidencia_dfs <- lapply(1:length(cum_inc), function(i) {
+  evento_actual <- cum_inc[[i]]
+  incidencia_df <- data.frame(
+    TIME = evento_actual$time,
+    INCIDENCIA = evento_actual$est,
+    DAYS = evento_actual$time,
+    EVENTO = nombres_eventos[i]
+  )
+return(incidencia_df)
+  })
+```
+
+#unir dataframe
+```{r}
+incidencia_final <- do.call(rbind, incidencia_dfs)
+```
+
+#Filtrar eventos especificos
+```{r}
+incidencia_final_filtrado <- incidencia_final %>%
+  filter(EVENTO %in% c("Censores", "died from melanoma", "died from other causes"))
+```
+
+
+
+
+#Asegurarse de que Evento es un factor
+```{r}
+incidencia_final_filtrado$EVENTO <- as.factor(incidencia_final_filtrado$EVENTO)
+```
+
+#Colores para los eventos
+```{r}
+colores_eventos <- c("Censores" = "black", "died from melanoma" = "#8A2BE2", "died from other causes" = "ffbsfd")
+```
+
+#crear el plot
+```{r}
+g <- ggplot(incidencia_final_filtrado, aes(x = DAYS, y = INCIDENCIA, colour = EVENTO)) + geom_step() +
+  scale_x_continuous(limits = c(0, 5565)) +
+  scale_y_continuous(limits = c(0,1)) +
+  scale_colour_manual(values = colores_eventos, name = "Event type") +
+  labs(
+    title = "Incidencia acumulada",
+    subtitle = "Análisis por días",
+    x = "Días",
+    y = "Inicidencia acumulada"
+  ) + 
+  theme_minimal() + 
+  theme(
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 10),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 10)
+  )
+
+g
+
+```
+
+```{r}
+remove.packages("glue")
+install.packages("glue", dependencies = TRUE)
+
+```
+
+
+# Analisis de incidencia acumulada para examinar la mortalidad por melanoma, diferenciando segun la presencia o ausencia de úlcera
+```{r}
+library(tidycmprsk)
+
+cuminc(Surv(time, status) ~ ulcer, data = Melanoma) %>% 
+  tbl_cuminc(
+    times = 1826.25,
+    label_header = "**{time/365.25} - year cuminc**") %>%
+  add_p()
+  
+```
+
+```{r}
+library(tidycmprsk)
+library(ggsurvfit)
+
+cuminc(Surv(time, status) ~ ulcer, data = Melanoma) %>%
+  ggcum1inc() +
+  labs(
+    x = "Días") +
+  add_confidence_interval() +
+  add_risktable()
+```
+
+# Regresión de fine-gray
+```{r}
+library(gtsummary)
+crr(Surv(time, status) ~ sex + age, data = Melanoma) %>%
+  tbl_regression(exp = TRUE)
+```
+
+
+
