@@ -1,4 +1,4 @@
-# An-lisis-Supervivencia-Melanoma
+# Analisis-Supervivencia-Melanoma
 Este proyecto realiza un análisis de supervivencia utilizando el conjunto de datos **Melanoma**. El objetivo es calcular la incidencia acumulada y aplicar métodos de regresión de Fine-Gray para examinar la mortalidad por melanoma, diferenciando según la presencia o ausencia de úlceras.
 
 ## Objetivo
