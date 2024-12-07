@@ -1,0 +1,20 @@
+Datos previos:
+## La incidencidencia acumulativa para riesgos competitivos
+Un riesgo competitivo se refiere a un evento que dificulta o modifica la probabilidad de que ocurra el evento de interés. 
+En un estudio de supervivencia de cáncer, la muerte por cosas no relacionadas con el cáncer seria un riesgo competitivo.
+
+## Prueba de gray:
+Es una versión modificada del chi-cuadraro utlizada para comparar 2 o mas grupos en terminas de incidencia acumulada. Es útil para evaluar si hay diferencias significativas en la incidencia acumulada entre diferentes grupos.
+
+## Explicación de Resultados
+- Gráfico de incidencia acumulada:
+Todas las curvas empiezan en 0. El gráfico permite visualizar cómo se acumula la probabilidad de que ocurra cada tipo de evento a medida que pasa el tiempo. Por ejemplo, se ve cómo la probabilidad de muerte por melanoma aumenta con el tiempo, mientras que la probabilidad de censura o de morir por otras causas se comporta de manera diferente.
+
+- Gráfico de incidenncia acumulada según la presencia de úlceras:
+Es un gráfico similar al anterior, pero ahora diferencia los grupos según la presencia de úlceras. 
+El gráfico visualiza cómo la incidencia acumulada de muerte por melanoma o por otras causas se distribuye según la presencia de úlceras en los pacientes. Los intervalos de confianza muestran la incertidumbre en las estimaciones de la incidencia acumulada.
+
+- Regresión de Fine-Grey:
+La regresión se realiza para predecir la probabilidad de los eventos (muerte por melanoma y muerte por otras causas) usando las variables sexo y edad.
+Los resultados de la regresión muestran los coeficientes de las variables y sus significados estadísticos (expresados como razones de riesgo) para cada tipo de evento. 
+El HR de sexo es 1.80, por lo que el sexo asociado tiene un 80% mas de probabilidades de sufrir. Y es significativo. Y la variable edad aumenta solo un 1% la probabilidad de que ocurra el evento de interés. Y no es significativo.
