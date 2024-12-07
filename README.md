@@ -14,9 +14,12 @@ El análisis tiene como objetivo estudiar la relación entre varios factores (co
 - `Data/`: Contiene los datasets necesarios para el análisis.
   - `Melanoma_data.csv`: Dataset de melanoma.
   
-- `Resultados/`: Guarda los resultados del análisis, como gráficos y tablas.
-  - `gráficos/`: Carpeta donde se guardan los gráficos generados.
-  - `resultados_texto.txt`: Resumen de los resultados del análisis.
+- `Resultados/`: Guarda los resultados del análisis, como gráficos y explicaciones en texto.
+  - `Incidencia_Acumulada_Melanoma/`: Gráfico de la incidencia acumulada del melanoma.
+  - `Incidencia_acumulada_segun_ulceras/`: Gráfico de la incidencia acumulada del melanoma teniendo en cuenta las úlceras.
+  - `README`: Resumen de los resultados del análisis.
+  - `p-valor incidencia acumulada segun ulceras/`: Estadísticos para la incidencia acumulada según úlceras.
+  - `p-valor/`: Estadísticos para el test de Fine-Gray
 
 - `README.md`: Este archivo con información sobre el proyecto, instrucciones para reproducir el análisis, y descripción del contenido.
 
